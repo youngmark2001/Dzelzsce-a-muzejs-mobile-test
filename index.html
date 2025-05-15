@@ -7,8 +7,6 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet"/>
-
-  <!-- Model Viewer -->
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 
   <style>
@@ -23,93 +21,95 @@
     model-viewer {
       width: 100vw;
       height: 100vh;
-      background: #d8eafe;
+      background: radial-gradient(circle, #5e83a8 0%, #7fa4ce 80%);
+      border-radius: 50px;
+      overflow: hidden;
     }
 
-    .Hotspot {
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border: 1px solid #0b111f;
-      width: 20px;
-      height: 20px;
-      padding: 0;
+    model-viewer::part(ar-button) {
       position: absolute;
-      transform: translate3d(-50%, -50%, 0);
-      cursor: pointer;
-      border: none;
-      backdrop-filter: blur(2px);
-    }
-
-    .HotspotAnnotation {
-      display: none;
-    }
-
-    #popup {
-      position: absolute;
-      display: none;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-      padding: 10px;
-      font-size: 13px;
-      max-width: 180px;
-      z-index: 999;
-      font-family: 'Lexend', sans-serif;
-    }
-
-    #popup-title {
-      font-weight: bold;
-      color: #3b8ee5;
-    }
-
-    #popup-price, #popup-desc {
-      mgin-top: 4px;
-    }
-
-    .side-buttons {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 1000;
-    }
-
-    .side-buttons button {
-      padding: 10px 16px;
-      background: rgba(255, 255, 255, 0.3);
+      bottom: 20px;
+      right: 20px;
+      background-color: #3b8ee5;
       color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
       font-family: 'Lexend', sans-serif;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      z-index: 1001;
+    }
+
+    model-viewer::part(ar-button):hover {
+      background-color: #1c6fd3;
+    }
+
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1002;
+      transition: opacity 0.5s ease;
+    }
+
+    #overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #startButton {
+      padding: 28px 56px;
+      font-size: 32px;
+      font-family: 'Lexend', sans-serif;
+      font-weight: bold;
+      color: white;
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 20px;
       cursor: pointer;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      transition: background 0.3s ease;
+      backdrop-filter: blur(8px);
+      transition: background 0.3s ease, transform 0.2s ease;
     }
 
-    .side-buttons button:hover {
-      background: #3b8ee5;
+    #startButton:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
     }
-    model-viewer::pt(ar-button) {
+
+    #infoBubble {
   position: absolute;
-  bottom: 50px;
-  right: 50px;
-  background-color: #3b8ee5;
-  color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 20px 30px;
+  font-size: 18px;
   font-family: 'Lexend', sans-serif;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  z-index: 1001;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
 }
 
-model-viewer::part(ar-button):hover {
-  background-color: #1c6fd3;
-}
+    #infoBubble.show {
+      opacity: 1;
+    }
+
+    #infoBubble.hide {
+      opacity: 0;
+    }
   </style>
 </head>
 
@@ -122,108 +122,59 @@ model-viewer::part(ar-button):hover {
   camera-controls
   disable-pan
   auto-rotate
-  shadow-intensity="0.97"
-  exposure="1.03"
+  interaction-prompt="when-focused"
+  shadow-intensity="1.97"
+  tone-mapping="aces"
+  exposure="1.93"
   shadow-softness="0.67"
   min-camera-orbit="auto 0deg auto"
   max-camera-orbit="auto 85deg auto"
   environment-image="legacy">
-
-  <button class="Hotspot" slot="hotspot-1" data-position="-0.69m 5.59m -13.95m" data-normal="0 0 1" data-orbit="0deg 50deg 5m"
-    data-visibility-attribute="visible"
-    onclick="handleHotspotClick(this, 'LED Ekrāns', 'Ask for adjustment', 'LED screen positioned near the center.')">
-    <div class="HotspotAnnotation">LED Ekrāns</div>
-  </button>
-
-  <button class="Hotspot" slot="hotspot-2" data-position="8.82m 6.14m -14.04m" data-normal="0.25 0 0.96" data-orbit="0deg 50deg 5m"
-    data-visibility-attribute="visible"
-    onclick="handleHotspotClick(this, 'Gaismu Konstrukcija', 'Ask for adjustment', 'Lighting rig setup for events.')">
-    <div class="HotspotAnnotation">Gaismu Konstrukcija</div>
-  </button>
-
-  <button class="Hotspot" slot="hotspot-3" data-position="-2.63m 1.29m 1.23m" data-normal="0 1 0" data-orbit="0deg 50deg 5m"
-    data-visibility-attribute="visible"
-    onclick="handleHotspotClick(this, 'Apaļo galdu izkārtojums', 'Ask for adjustment', 'Round table layout for workshops or dining.')">
-    <div class="HotspotAnnotation">Apaļo galdu izkārtojums</div>
-  </button>
-
-  <button class="Hotspot" slot="hotspot-4" data-position="-8.55m 1.51m -10.00m" data-normal="0 0 1" data-orbit="0deg 50deg 5m"
-    data-visibility-attribute="visible"
-    onclick="handleHotspotClick(this, 'Skaņas sistēma', '300 EUR + PVN', 'Premium sound system setup.')">
-    <div class="HotspotAnnotation">Skaņas sistēma</div>
-  </button>
 </model-viewer>
 
-<div class="side-buttons">
-  <button onclick="goToHotspot('hotspot-1')">LED Ekrāns</button>
-  <button onclick="goToHotspot('hotspot-2')">Gaismu Konstrukcija</button>
-  <button onclick="goToHotspot('hotspot-3')">Apaļo galdu izkārtojums</button>
-  <button onclick="goToHotspot('hotspot-4')">Skaņas sistēma</button>
-  <button id="resetViewBtn">Kopskats</button>
+<div id="overlay">
+  <button id="startButton">SKATĪT 3D MODELI</button>
 </div>
 
-<!-- Popup Cloud -->
-<div id="popup">
-  <div id="popup-title"></div>
-  <div id="popup-price"></div>
-  <div id="popup-desc"></div>
-</div>
+<div id="infoBubble">Pagrieziet vai pietuviniet modeli ar pirkstu vai peli</div>
 
 <script>
   const modelViewer = document.getElementById('model');
-  const popup = document.getElementById('popup');
-  let activeHotspot = null;
+  const overlay = document.getElementById('overlay');
+  const infoBubble = document.getElementById('infoBubble');
 
-  function handleHotspotClick(hotspot, title, price, desc) {
-    const orbit = hotspot.dataset.orbit;
-    const target = hotspot.dataset.position;
-
-    if (orbit && target) {
-      modelViewer.cameraTarget = target;
-      modelViewer.cameraOrbit = orbit;
-      modelViewer.autoRotate = false;
+  function animateCameraZoom(startRadius, endRadius, duration = 1500) {
+    const startTime = performance.now();
+    function update() {
+      const now = performance.now();
+      const elapsed = now - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      const radius = startRadius + (endRadius - startRadius) * t;
+      modelViewer.cameraOrbit = `0deg 50deg ${radius}m`;
+      if (t < 1) requestAnimationFrame(update);
     }
-
-    document.querySelectorAll('.Hotspot').forEach(h => h.removeAttribute('data-active'));
-    hotspot.setAttribute('data-active', 'true');
-    activeHotspot = hotspot;
-
-    document.getElementById('popup-title').textContent = title;
-    document.getElementById('popup-price').textContent = price;
-    document.getElementById('popup-desc').textContent = desc;
-
-    popup.style.display = 'block';
-    updatePopupPosition();
+    requestAnimationFrame(update);
   }
 
-  function updatePopupPosition() {
-    if (!activeHotspot) return;
-    const rect = activeHotspot.getBoundingClientRect();
-    popup.style.left = `${rect.left + rect.width / 2}px`;
-    popup.style.top = `${rect.top - 90}px`;
+  function showInfoBubble() {
+    infoBubble.classList.add('show');
+    setTimeout(() => {
+      window.addEventListener('click', hideInfoBubbleOnce);
+      window.addEventListener('touchstart', hideInfoBubbleOnce);
+    }, 800); // delay to avoid immediate hide
   }
 
-  function goToHotspot(slotName) {
-    const hotspot = document.querySelector(`[slot="${slotName}"]`);
-    if (hotspot) hotspot.click();
+  function hideInfoBubbleOnce() {
+    infoBubble.classList.remove('show');
+    infoBubble.classList.add('hide');
+    window.removeEventListener('click', hideInfoBubbleOnce);
+    window.removeEventListener('touchstart', hideInfoBubbleOnce);
   }
 
-  modelViewer.addEventListener('camera-change', updatePopupPosition);
-  window.addEventListener('resize', updatePopupPosition);
-
-  window.addEventListener('click', (e) => {
-    if (!e.target.closest('.Hotspot')) {
-      popup.style.display = 'none';
-      activeHotspot = null;
-    }
-  });
-
-  document.getElementById('resetViewBtn').addEventListener('click', () => {
-    modelViewer.cameraOrbit = '0deg 50deg 5m';
-    modelViewer.cameraTarget = '0m 0m 0m';
-    modelViewer.autoRotate = true;
-    popup.style.display = 'none';
-    activeHotspot = null;
+  document.getElementById('startButton').addEventListener('click', () => {
+    overlay.classList.add('hidden');
+    animateCameraZoom(10, 5);
+    showInfoBubble();
   });
 </script>
 
