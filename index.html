@@ -27,34 +27,21 @@
     }
 
     .Hotspot {
-      background: #0b111f;
-      border-radius: 4px;
-      border: none;
-      box-shadow: 0 1px 2px #0b111f;
-      color: #f2f2f2;
-      font-size: 10px;
-      font-weight: 500;
-      max-width: 100px;
-      padding: 0.3em 0.6em;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border: 1px solid #0b111f;
+      width: 20px;
+      height: 20px;
+      padding: 0;
       position: absolute;
-      width: max-content;
-      height: max-content;
       transform: translate3d(-50%, -50%, 0);
-      opacity: 0.5;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(4px);
       cursor: pointer;
-    }
-
-    .Hotspot:hover {
-      opacity: 1;
-      background: #3b8ee5;
+      border: none;
+      backdrop-filter: blur(2px);
     }
 
     .HotspotAnnotation {
-      font-size: 10px;
-      font-weight: bold;
-      color: inherit;
+      display: none;
     }
 
     #popup {
@@ -89,6 +76,28 @@
 
     #popup-price, #popup-desc {
       margin-top: 4px;
+    }
+
+    .side-buttons {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1000;
+    }
+
+    .side-buttons button, #resetViewBtn {
+      padding: 10px 16px;
+      background: #3b8ee5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: 'Lexend', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
   </style>
 </head>
@@ -131,23 +140,15 @@
     onclick="handleHotspotClick(this, 'Skaņas sistēma', '300 EUR + PVN', 'Premium sound system setup.')">
     <div class="HotspotAnnotation">Skaņas sistēma</div>
   </button>
-
-  <button id="resetViewBtn" style="
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  padding: 10px 16px;
-  background: #3b8ee5;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-family: 'Lexend', sans-serif;
-  cursor: pointer;
-  z-index: 1000;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-">Reset View</button>
 </model-viewer>
+
+<div class="side-buttons">
+  <button onclick="goToHotspot('hotspot-1')">LED Ekrāns</button>
+  <button onclick="goToHotspot('hotspot-2')">Gaismu Konstrukcija</button>
+  <button onclick="goToHotspot('hotspot-3')">Apaļo galdu izkārtojums</button>
+  <button onclick="goToHotspot('hotspot-4')">Skaņas sistēma</button>
+  <button id="resetViewBtn">Reset View</button>
+</div>
 
 <!-- Popup Cloud -->
 <div id="popup">
@@ -185,10 +186,14 @@
 
   function updatePopupPosition() {
     if (!activeHotspot) return;
-
     const rect = activeHotspot.getBoundingClientRect();
     popup.style.left = `${rect.left + rect.width / 2}px`;
-    popup.style.top = `${rect.top - 90}px`; // ← higher popup
+    popup.style.top = `${rect.top - 90}px`;
+  }
+
+  function goToHotspot(slotName) {
+    const hotspot = document.querySelector(`[slot="${slotName}"]`);
+    if (hotspot) hotspot.click();
   }
 
   modelViewer.addEventListener('camera-change', updatePopupPosition);
@@ -200,15 +205,14 @@
       activeHotspot = null;
     }
   });
-  document.getElementById('resetViewBtn').addEventListener('click', () => {
-  modelViewer.cameraOrbit = '0deg 50deg 5m';
-  modelViewer.cameraTarget = '0m 0m 0m';
-  modelViewer.autoRotate = true;
 
-  // Optional: hide popup too
-  popup.style.display = 'none';
-  activeHotspot = null;
-});
+  document.getElementById('resetViewBtn').addEventListener('click', () => {
+    modelViewer.cameraOrbit = '0deg 50deg 5m';
+    modelViewer.cameraTarget = '0m 0m 0m';
+    modelViewer.autoRotate = true;
+    popup.style.display = 'none';
+    activeHotspot = null;
+  });
 </script>
 
 </body>
