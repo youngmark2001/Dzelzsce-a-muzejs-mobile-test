@@ -57,8 +57,6 @@
       font-family: 'Lexend', sans-serif;
     }
 
-    /* Removed triangle arrow from popup */
-
     #popup-title {
       font-weight: bold;
       color: #3b8ee5;
@@ -95,24 +93,23 @@
     .side-buttons button:hover {
       background: #3b8ee5;
     }
-
     model-viewer::part(ar-button) {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background-color: #3b8ee5;
-      color: white;
-      font-family: 'Lexend', sans-serif;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-      z-index: 1001;
-    }
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: #3b8ee5;
+  color: white;
+  font-family: 'Lexend', sans-serif;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+}
 
-    model-viewer::part(ar-button):hover {
-      background-color: #1c6fd3;
-    }
+model-viewer::part(ar-button):hover {
+  background-color: #1c6fd3;
+}
   </style>
 </head>
 
@@ -123,6 +120,7 @@
   ar
   ar-modes="webxr scene-viewer quick-look"
   camera-controls
+  disable-pan
   auto-rotate
   shadow-intensity="0.97"
   exposure="1.03"
